@@ -10,71 +10,199 @@ Utilizare la siguiente nomenclatura:
 #include <iostream>
 #include <vector>
 
+class Capsule
+{
+private:
+	std::string Name;
+	//Healing = 1, Ki Recover = 2
+	std::string Type;
+	int Duration;
+
+public:
+
+	Capsule(std::string capsuleName, int capsuleType, int capsuleDuration)
+	{
+		Name = capsuleName;
+
+		switch (capsuleType)
+		{
+		case 1:
+			Type = "Healing";
+			break;
+		case 2:
+			Type = "Energy";
+		default:
+			Type = "Unknown";
+			break;
+		}
+		Duration = capsuleDuration;
+	}
+
+	//This is only to prints the properties of the capsule
+	void ShowData()
+	{
+		std::cout << "Capsule: " << Name + "\n";
+		std::cout << "Type: " << Type << "\n";
+		std::cout << "Duration: " << Duration << "s" << "\n";
+	}
+
+	void GetInventoryData()
+	{
+		std::cout << "Capsule: " << Name + "\n";
+		std::cout << "Type: " << Type << "\n";
+		std::cout << "Duration: " << Duration << "s" << "\n";
+		std::cout << "----------------------------------------------\n";
+	}
+	//This returns the name of the capsule referenced
+	std::string GetCapsuleName()
+	{
+		return Name;
+	}
+	//This function returns the type of capsule
+	std::string GetCapsuleType()
+	{
+		return Type;
+	}
+};
 
 class Character
 {
 private:
 
 	//Main properties
-	std::string characterName = "";
-	int characterLife;
-	int characterKi;
+	int Life;
+	int Ki;
 	//Combat properties
-	int kiBlastDamage;
-	int beamDamage;
-	int specialAttackDamage;
+	int Stamina;
+	//Secondary properties
+	std::vector<Capsule> inventory;
 
 public:
 	//Constructor that initializes the variable playerName
-	Character(std::string name, int life, int Ki, int kiblast, int beam, int specialAttack)
+	Character(int initiallife, int initialKi, int initialStamina)
 	{
 		//Main properties
-		characterName = name;
-		characterLife = life;
-		characterKi = Ki;
-		//Combat properties
-		kiBlastDamage = kiblast;
-		beamDamage = beam;
-		specialAttackDamage = specialAttack;
-	}
-	//This returns the name of the player
-	std::string GetCharacterName()
-	{
-		if (characterName == "")
-		{
-			return "Character name not assigned";
-		}
-		return characterName;
+		Life = initialKi;
+		Ki = initialKi;
+		Stamina = initialKi;
 	}
 
-	//Returns the current life of the character
+	//Adds the object at the beginning of the vector
+	void AddToInventory(Capsule item)
+	{
+		inventory.push_back(item);
+	}
+
+	//Method that shows in console all the items inside of the vector
+	void Showinventory()
+	{
+		if (inventory.size() < 1)
+		{
+			system("cls");
+			std::cout << "You dont have any item in your inventory" << std::endl;
+			std::cout << "PRESS ENTER TO GO BACK TO THE MENU" << std::endl;
+		}
+		else
+		{
+			system("cls");
+			for (int i = 0; i < inventory.size(); i++)
+			{
+				inventory[i].GetInventoryData();
+			}
+			std::cout << "PRESS ENTER TO GO BACK TO THE MENU" << std::endl;
+		}
+		std::cin.get();
+		system("cls");
+	}
+
+	//Gets the vectors size
+	int GetInventorySize()
+	{
+		return inventory.size();
+	}
+
+	//This method increases stamina value every time is called
+	void RecoverStamina()
+	{
+		if (Stamina != 4)
+		{
+			Stamina = Stamina + 1;
+		}
+	}
+
+	//This method decreases Dodge value every time is called for game narrative
+	void Dodge()
+	{   
+		if (Stamina >= 2)
+		{
+			Stamina = Stamina - 2;
+		}
+	}
+
+	//This method prints into the console the value of Stamina and returns its value too;
+	int GetStamina()
+	{
+		std::cout << "Stamina: " << Stamina << "\n";
+
+		return Stamina;
+	}
+
+	//This method helps me to decrease Lifes Value
+	void LoseLife(int Value)
+	{
+		if (Value > Life)
+		{
+			Value = Life;
+		}
+		
+		Life = Life - Value;
+
+		std::cout << "Life left: " << Life << "\n";
+	}
+
+	//This method prints Lifes Value into the console
+	void PrintLife()
+	{
+		std::cout << "Life: " << Life << "\n";;
+	}
+
+	//This method gives to me the value of Life
 	int GetLife()
 	{
-		return characterLife;
+		return Life;
 	}
 
-	//Returns the damage of character's KiBlast
-	int GetKiBlastDamage()
+	//This method helps me to decrease the value of Ki
+	void LoseKi(int Value)
 	{
-		return kiBlastDamage;
+		if (Value <= Ki)
+		{
+			Ki = Ki - Value;
+		}
+		
+	}
+	//This method prints in the console the value of Ki
+	void PrintKi()
+	{
+		std::cout << "Ki: " << Ki << "\n";
 	}
 
-	//Returns the damage of character's Beam
-	int GetBeamDamage()
+	//This method helps to me to control the value of Ki to increase it
+	void RecoverKi(int Value)
 	{
-		return beamDamage;
+		Ki = Ki + Value;    
 	}
 
-	//Returns the damage of character's KiBlast
-	int GetSpecialAttackDamage()
+
+	//This method gives to me the value of Ki
+	int GetKi()
 	{
-		return specialAttackDamage;
+		return Ki;
 	}
 
 };
 
-
 int main()
 {
-	return 0;
+    return 0;
 }

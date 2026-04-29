@@ -5,6 +5,7 @@ Utilizare la siguiente nomenclatura:
     -Utilizare PascalCase para las funciones y metodos
 	-Mis los parametros utilizaran camelCase
 	-Mis funciones siempre empezaran con la accion a hacer y despues a donde se lo voy a aplicar
+    -Mis comentarios estaran en ingles
 
 */
 
@@ -49,7 +50,7 @@ public:
 		std::cout << "Value: " << value << "\n";
 	}
 
-	void GetInventoryData()
+	void CapsuleSortedData()
 	{
 		std::cout << "Capsule: " << Name + "\n";
 		std::cout << "Type: " << Type << "\n";
@@ -116,7 +117,7 @@ public:
 			for (int i = 0; i < inventory.size(); i++)
 			{
                 std::cout << "------" << i + 1<< "------\n";
-				inventory[i].GetInventoryData();
+				inventory[i].CapsuleSortedData();
 			}
 			return true;
 		}
@@ -214,6 +215,11 @@ public:
 
     void HealCharacter(int value)
     {
+        if (value == 100)
+        {
+            Life = 100;
+        }
+        
         Life += value;
     }
 
@@ -230,14 +236,18 @@ public:
         
     }
 
+    //Method use to delete an item form the inventory
+    void DeleteItem(int index)
+    {
+        inventory.erase(inventory.begin() + index);
+    }
+
 };
 
 //Player is an object from the class "Character" used for modify player stadistics
 Character Player(100, 4, 4);
 
-Capsule EnergyZ("EnergyZ", 1, 5);
-Capsule PowerCapsule("PowerCapsule", 2, 3);
-
+// This function lets the player pick capsules before the adventure starts
 //These variables are used to determine which direction the game will play
 int Decision = 0;
 int *pDecision = &Decision;
@@ -252,9 +262,60 @@ void TextBox(std::string text)
 //This function is being used to represent the action options within the game
 void SpecialTextBox(std::string text)
 {
-    std::cout << "|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n";
+    std::cout << "|-------------------------------|\n";
     std::cout << text << "\n";
 }
+
+void CapsuleSelection()
+{
+    std::vector<Capsule> availableCapsules = {
+        Capsule("EnergyZ",      1, 100),
+        Capsule("EnergyM",      1, 25),
+        Capsule("PowerCapsule", 2, 3),
+        Capsule("MiniEnergy",   1, 10),
+        Capsule("KiBooster",    2, 5),
+    };
+
+        while (true)
+        {
+            system("cls");
+            TextBox("--- CAPSULE SELECTION ---");
+            TextBox("Choose 2 capsules to bring to your adventure.\n");
+
+            for (int i = 0; i < (int)availableCapsules.size(); i++)
+            {
+                std::cout << "--- " << i + 1 << " ---\n";
+                availableCapsules[i].CapsuleSortedData();
+            }
+
+            int choice;
+            std::cin >> choice;
+
+            if (std::cin.fail() || choice < 1 || choice > availableCapsules.size())
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max());
+                TextBox("Invalid option, try again.");
+            }
+            else
+            {
+                Player.AddToInventory(availableCapsules[choice - 1]);
+                std::cout << ">>> " << availableCapsules[choice - 1].GetCapsuleName() << " added!\n";
+                if (Player.GetInventorySize() > 1)
+                {
+                    break;
+                }
+                
+            }
+        }
+    
+
+    TextBox("Inventory ready! Starting adventure...");
+    std::cin.ignore();
+    std::cin.get();
+    system("cls");
+}
+
 
 //This function sets the selected character apart from checking if the player actually selects a playable character
 void CharacterSelection()
@@ -309,17 +370,20 @@ void Instructions()
     std::cout << "//Press Enter to Continue//\n";
     system("cls");
     TextBox("To use the inventory you just need to input the value that is above the capsule name like in this example");
-    TextBox("--- 1 ---");
     TextBox("--- INVENTORY ---");
+    std:: cout << "\n";
+    TextBox("--- 1 ---");
     std::cout << "Capsule: " << "(Example\n";
 	std::cout << "Type: " << "(Example)\n";
 	std::cout << "Value: " << "(Example)\n";
+    std:: cout << "\n";
     TextBox("In this example you will 1 to use that capsule");
     std::cin.get();
     std::cout << "//Press Enter to Continue//\n";
 
 }
 
+//Function that lets the player use its
 void OpenInventory(Character &targetPlayer)
 {
     bool inInventory = true;
@@ -354,6 +418,7 @@ void OpenInventory(Character &targetPlayer)
             Capsule selected = targetPlayer.GetCapsuleFromInventory(itemChoice);
             targetPlayer.UseCapsule(selected);
             std::cout << "\n>>> You used: " << selected.GetCapsuleName() << " <<<\n";
+            targetPlayer.DeleteItem(itemChoice - 1);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.ignore();
             std::cin.get();
@@ -463,8 +528,6 @@ void FinalDecision(std::string Text)
 int main()
 {
 
-    Player.AddToInventory(EnergyZ);
-    Player.AddToInventory(PowerCapsule);
     //This Variable helps me to keep every text typed in this code, specifically to not lose the actual Case
     std::string textVariable;
     std::string *ptextVariable = &textVariable;
@@ -484,6 +547,7 @@ int main()
     std::cin.get();
     Instructions();
     CharacterSelection();
+    CapsuleSelection();
     system("cls");
 
     // Attack SCENE #1
@@ -518,9 +582,9 @@ int main()
         break;
     }
     std::cout << "//Press Enter to Continue//\n";
-    //cin.ignore() and cin.get() are used for ask the user input the Keybind Enter
     std::cin.ignore();
     std::cin.get();
+
     system("cls");
     
         //Cinematic SCENE #1
@@ -702,7 +766,6 @@ int main()
         break;
     }
     std::cout << "//Press Enter to Continue//\n";
-    std::cin.ignore();
     std::cin.get();
     system("cls");
 
@@ -714,14 +777,12 @@ int main()
         *ptextVariable = "Cooler was trying to charge his super attack when you managed to attack him from behind sending him to the center of the planet where he dies disintegrated";
         TextBox(*ptextVariable);
         std::cout << "//Press Enter to Continue//\n";
-        std::cin.ignore();
         std::cin.get();
 
         system("COLOR 0F");
         *ptextVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
         TextBox(*ptextVariable);
         std::cout << "//Press Enter to Continue//\n";
-        std::cin.ignore();
         std::cin.get();
     }
     //Special Endings
@@ -732,20 +793,17 @@ int main()
             *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, a Golden aura starts to surround you....";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             system("COLOR 0E");
             *ptextVariable = "You Transformed into a Super Saiyan!!!!";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "This will be your final attack";
@@ -766,7 +824,7 @@ int main()
                 TextBox(*ptextVariable);
                 break;
 
-            case 6:
+            case 4:
                 exit(0);
                 break;
             }
@@ -780,20 +838,17 @@ int main()
             *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             system("COLOR 0C");
             *ptextVariable = "You power has increased!!!";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "This will be your final attack";
@@ -813,7 +868,7 @@ int main()
                 *ptextVariable = "You attacked Cooler were way faster than Cooler to launch its attack, making Cooler fly away and crashing out against the sun";
                 TextBox(*ptextVariable);
                 break;
-            case 6:
+            case 4:
                 exit(0);
                 break;
             }
@@ -827,20 +882,17 @@ int main()
             *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             system("COLOR 0D");
             *ptextVariable = "You power has increased unmeasurely!!!";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
             TextBox(*ptextVariable);
             std::cout << "//Press Enter to Continue//\n";
-            std::cin.ignore();
             std::cin.get();
             system("cls");
             *ptextVariable = "This will be your final attack";
@@ -874,7 +926,6 @@ int main()
         *ptextVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
         TextBox(*ptextVariable);
         std::cout << "//Press Enter to Continue//\n";
-        std::cin.ignore();
         std::cin.get();
 
     }
@@ -884,14 +935,12 @@ int main()
         *ptextVariable = "You tried everything you could to defeat him... But that was not enough... You lost against Cooler, making Goku lost against Freezer and his brother, corrupting the timeline....";
         TextBox(*ptextVariable);
         std::cout << "//Press Enter to Continue//\n";
-        std::cin.ignore();
         std::cin.get();
         exit(0);
     }
 
     //This indicates the end of the game
     TextBox("The End");
-    std::cin.ignore();
     std::cin.get();
     
     return 0;

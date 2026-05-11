@@ -247,14 +247,11 @@ public:
 //Player is an object from the class "Character" used for modify player stadistics
 Character Player(100, 4, 4);
 
-// This function lets the player pick capsules before the adventure starts
-//These variables are used to determine which direction the game will play
+// These variables are used to determine which direction the game will play
 int Decision = 0;
-int *pDecision = &Decision;
 int Race = 0;
 //This Variable helps me to keep every text typed in this code, specifically to not lose the actual Case
 std::string textVariable;
-std::string *ptextVariable = &textVariable;
 
 //This function simulates the way text boxes work in a video game and saves a few lines of code
 void TextBox(std::string text)
@@ -269,6 +266,7 @@ void SpecialTextBox(std::string text)
     std::cout << text << "\n";
 }
 
+// This function lets the player pick capsules before the adventure it starts
 void CapsuleSelection()
 {
     std::vector<Capsule> availableCapsules = {
@@ -319,7 +317,6 @@ void CapsuleSelection()
     system("cls");
 }
 
-
 //This function sets the selected character apart from checking if the player actually selects a playable character
 void CharacterSelection()
 {
@@ -348,12 +345,10 @@ void CharacterSelection()
             std::cin.get();
         }
         
-        
         if (Race > 0 && Race < 4)
         {
             Loop = false;
         }
-
 
     }
     
@@ -386,7 +381,7 @@ void Instructions()
 
 }
 
-//Function that lets the player use its
+//Function that lets the player use its inventory
 void OpenInventory(Character &targetPlayer)
 {
     bool inInventory = true;
@@ -455,9 +450,9 @@ void Decisions(std::string Text)
         SpecialTextBox("5-Inventory");
         SpecialTextBox("6-Exit game");
 
-        std::cin >> *pDecision;
+        std::cin >> Decision;
 
-        if (*pDecision == 5)
+        if (Decision == 5)
         {
             OpenInventory(Player);
         }
@@ -469,7 +464,7 @@ void Decisions(std::string Text)
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
             system("cls");
         }
-        if (*pDecision <= 0 || *pDecision >= 7)
+        if (Decision <= 0 || Decision >= 7)
         {
             system("cls");
             TextBox("You have not selected any option");
@@ -503,7 +498,7 @@ void FinalDecision(std::string Text)
         SpecialTextBox("3-Sun");
         SpecialTextBox("4-Exit game");
 
-        std::cin >> *pDecision;
+        std::cin >> Decision;
 
         if (std::cin.fail())
         {
@@ -511,7 +506,7 @@ void FinalDecision(std::string Text)
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
             system("cls");
         }
-        if (*pDecision <= 0 || *pDecision >= 6)
+        if (Decision <= 0 || Decision >= 6)
         {
             system("cls");
             TextBox("You have not selected any option");
@@ -531,9 +526,9 @@ void AttackScene1()
 {
     // Attack SCENE #1
 
-    *ptextVariable = "Cooler lunges at you looking to connect a blow!!!!!";
-    Decisions(*ptextVariable);
-    switch (*pDecision)
+    textVariable = "Cooler lunges at you looking to connect a blow!!!!!";
+    Decisions(textVariable);
+    switch (Decision)
     {
     case 1:
         TextBox("You also attacked him, exchanging blows with great aggressiveness, causing a great damage to him, but also a little of damage to you.....");
@@ -570,23 +565,23 @@ void CinematicScene1()
         
         //Cinematic SCENE #1
 
-    switch (*pDecision)
+    switch (Decision)
     {
     case 1:
-        *ptextVariable = "Just for a moment you escape from Cooler to rest just a moment, but Cooler finds you and wants to Connect another attack!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Just for a moment you escape from Cooler to rest just a moment, but Cooler finds you and wants to Connect another attack!!!";
+        TextBox(textVariable);
         break;
     case 2:
-        *ptextVariable = "You get recover from the attack and watch that Cooler wants to Keep punchin you!!";
-        TextBox(*ptextVariable);
+        textVariable = "You get recover from the attack and watch that Cooler wants to Keep punchin you!!";
+        TextBox(textVariable);
         break;
     case 3:
-        *ptextVariable = "You Keep punching Cooler, but then Cooler Dodges one of your attacks and tries to punch you!!!";
-        TextBox(*ptextVariable);
+        textVariable = "You Keep punching Cooler, but then Cooler Dodges one of your attacks and tries to punch you!!!";
+        TextBox(textVariable);
         break;
     case 4:
-        *ptextVariable = "Cooler is getting closer to you!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler is getting closer to you!!!";
+        TextBox(textVariable);
         break;
     case 6:
         exit(0);
@@ -599,33 +594,33 @@ void AttackScene2()
 {
         //Attack SCENE #2
 
-    Decisions(*ptextVariable);
+    Decisions(textVariable);
     system("cls");
 
-    switch (*pDecision)
+    switch (Decision)
     {
     case 1:
-        *ptextVariable = "You attacked him aswell, for luck you connect more hits than him, causing great damage to him!!!";
-        TextBox(*ptextVariable);
+        textVariable = "You attacked him aswell, for luck you connect more hits than him, causing great damage to him!!!";
+        TextBox(textVariable);
         Player.LoseLife(20);
         Player.RecoverStamina();
         break;
     case 2:
-        *ptextVariable = "That is not effective on him, which causes him to keep hitting you, causing more damage.";
-        TextBox(*ptextVariable);
+        textVariable = "That is not effective on him, which causes him to keep hitting you, causing more damage.";
+        TextBox(textVariable);
         Player.LoseLife(25);
         Player.LoseKi(2);
         Player.PrintKi();
         Player.RecoverStamina();
         break;
     case 3:
-        *ptextVariable = "You dodge him again to keep punching him";
-        TextBox(*ptextVariable);
+        textVariable = "You dodge him again to keep punching him";
+        TextBox(textVariable);
         Player.Dodge();
         break;
     case 4:
-        *ptextVariable = "You decided to keep charging Ki causing that Cooler can punch you directly on the face, causing great damage";
-        TextBox(*ptextVariable);
+        textVariable = "You decided to keep charging Ki causing that Cooler can punch you directly on the face, causing great damage";
+        TextBox(textVariable);
         Player.RecoverKi(10);
         Player.PrintKi();
         Player.LoseLife(15);
@@ -644,23 +639,23 @@ void CinematicScene2()
 {
         //Cinematic SCENE #2
 
-    switch (*pDecision)
+    switch (Decision)
     {
     case 1:   
-        *ptextVariable = "Cooler increases its power even further beyond decided to Kill you and he goes right to your position!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler increases its power even further beyond decided to Kill you and he goes right to your position!!!";
+        TextBox(textVariable);
         break;
     case 2:
-        *ptextVariable = "You get recover from the attack and watch that Cooler wants to Keep punchin you!!";
-        TextBox(*ptextVariable);
+        textVariable = "You get recover from the attack and watch that Cooler wants to Keep punchin you!!";
+        TextBox(textVariable);
         break;
     case 3:
-        *ptextVariable = "You Keep punching Cooler, but then Cooler Dodges one of your attacks and tries to punch you again!!!";
-        TextBox(*ptextVariable);
+        textVariable = "You Keep punching Cooler, but then Cooler Dodges one of your attacks and tries to punch you again!!!";
+        TextBox(textVariable);
         break;
     case 4:
-        *ptextVariable = "Cooler is getting closer to you to attack again!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler is getting closer to you to attack again!!!";
+        TextBox(textVariable);
         break;
     case 6:
         exit(0);
@@ -672,14 +667,14 @@ void AttackScene3()
 {
     //Attack SCENE #3
 
-    Decisions(*ptextVariable);
+    Decisions(textVariable);
     system("cls");
 
-    switch (*pDecision)
+    switch (Decision)
     {
     case 1:
-        *ptextVariable = "You Keep attacking causing more damage, but causing a great damage to you!!!";
-        TextBox(*ptextVariable);
+        textVariable = "You Keep attacking causing more damage, but causing a great damage to you!!!";
+        TextBox(textVariable);
         Player.LoseLife(25);
         Player.RecoverStamina();
         break;
@@ -687,22 +682,22 @@ void AttackScene3()
         
         if (Player.GetKi() >= 15 )
         {
-            *ptextVariable = "You charged a great Ki attack causing great great damage against him";
-            TextBox(*ptextVariable);
+            textVariable = "You charged a great Ki attack causing great great damage against him";
+            TextBox(textVariable);
             Player.LoseKi(15);
             Player.PrintKi();
         }
         else if (Player.GetKi() >= 10 )
         {
-            *ptextVariable = "You charged a Ki attack causing great damage against him";
-            TextBox(*ptextVariable);
+            textVariable = "You charged a Ki attack causing great damage against him";
+            TextBox(textVariable);
             Player.LoseKi(10);
             Player.PrintKi();
         }
         else if (Player.GetKi() < 10)
         {
-            *ptextVariable = "You had not enough Ki to attack him so he punched again....";
-            TextBox(*ptextVariable);
+            textVariable = "You had not enough Ki to attack him so he punched again....";
+            TextBox(textVariable);
             Player.LoseLife(20);
             Player.PrintKi();
             Player.RecoverStamina();
@@ -710,13 +705,13 @@ void AttackScene3()
 
         break;
     case 3:
-        *ptextVariable = "You dodge him again";
-        TextBox(*ptextVariable);
+        textVariable = "You dodge him again";
+        TextBox(textVariable);
         Player.Dodge();
         break;
     case 4:
-        *ptextVariable = "You decided to charge Ki causing that Cooler can punch you directly on the face, causing great damage";
-        TextBox(*ptextVariable);
+        textVariable = "You decided to charge Ki causing that Cooler can punch you directly on the face, causing great damage";
+        TextBox(textVariable);
         Player.LoseLife(25);
         Player.RecoverKi(15);
         break;
@@ -734,26 +729,26 @@ void CinematicScene3()
 {
     //Cinematic SCENE #3
 
-    switch (*pDecision)
+    switch (Decision)
     {
     case 1:   
-        *ptextVariable = "Cooler is getting tired of it, so he is disposed to destroy you with a powerfull attack!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler is getting tired of it, so he is disposed to destroy you with a powerfull attack!!!";
+        TextBox(textVariable);
         break;
     case 2:
-        *ptextVariable = "Cooler is very mad at you and its disposed to destroy the planet only for kill you!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler is very mad at you and its disposed to destroy the planet only for kill you!!";
+        TextBox(textVariable);
         break;
     case 3:
         
-        *ptextVariable = "Cooler gets angrier and increases its speed so you cant dodge him causing you a lot of damage";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler gets angrier and increases its speed so you cant dodge him causing you a lot of damage";
+        TextBox(textVariable);
         Player.LoseLife(20);
         break;
 
     case 4:
-        *ptextVariable = "Cooler Laughs at you and starts to creating a powerfull attack!!!";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler Laughs at you and starts to creating a powerfull attack!!!";
+        TextBox(textVariable);
         break;
     case 6:
         exit(0);
@@ -771,14 +766,14 @@ void HandleEnding()
     //Good Ending
     if (Player.GetLife() > 45)
     {
-        *ptextVariable = "Cooler was trying to charge his super attack when you managed to attack him from behind sending him to the center of the planet where he dies disintegrated";
-        TextBox(*ptextVariable);
+        textVariable = "Cooler was trying to charge his super attack when you managed to attack him from behind sending him to the center of the planet where he dies disintegrated";
+        TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
 
         system("COLOR 0F");
-        *ptextVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
-        TextBox(*ptextVariable);
+        textVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
+        TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
     }
@@ -787,38 +782,38 @@ void HandleEnding()
     {
         if (Race == 1)
         {
-            *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, a Golden aura starts to surround you....";
-            TextBox(*ptextVariable);
+            textVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, a Golden aura starts to surround you....";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
             system("COLOR 0E");
-            *ptextVariable = "You Transformed into a Super Saiyan!!!!";
-            TextBox(*ptextVariable);
+            textVariable = "You Transformed into a Super Saiyan!!!!";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
-            TextBox(*ptextVariable);
+            textVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "This will be your final attack";
-            FinalDecision(*ptextVariable);
-            switch (*pDecision)
+            textVariable = "This will be your final attack";
+            FinalDecision(textVariable);
+            switch (Decision)
             {
             case 1:   
-                *ptextVariable = "You attacked Cooler before he could launch its attack, with no mercy, you maked him fall to its dead inside of the planet";
-                TextBox(*ptextVariable);
+                textVariable = "You attacked Cooler before he could launch its attack, with no mercy, you maked him fall to its dead inside of the planet";
+                TextBox(textVariable);
                 break;
             case 2:
-                *ptextVariable = "You charged a powerfull Kamehameha making the SuperNova of Cooler get back to him, eliminating him in the process";
-                TextBox(*ptextVariable);
+                textVariable = "You charged a powerfull Kamehameha making the SuperNova of Cooler get back to him, eliminating him in the process";
+                TextBox(textVariable);
                 break;
             case 3:
                 
-                *ptextVariable = "You attacked Cooler causing cancel its attack and you make him fly away, taking the oportunity to charge a Kamehameha and send him at the Sun";
-                TextBox(*ptextVariable);
+                textVariable = "You attacked Cooler causing cancel its attack and you make him fly away, taking the oportunity to charge a Kamehameha and send him at the Sun";
+                TextBox(textVariable);
                 break;
 
             case 4:
@@ -832,38 +827,38 @@ void HandleEnding()
         }
         else if (Race == 2) //Final Namekian Race
         {
-            *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
-            TextBox(*ptextVariable);
+            textVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
             system("COLOR 0C");
-            *ptextVariable = "You power has increased!!!";
-            TextBox(*ptextVariable);
+            textVariable = "You power has increased!!!";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
-            TextBox(*ptextVariable);
+            textVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "This will be your final attack";
-            FinalDecision(*ptextVariable);
-            switch (*pDecision)
+            textVariable = "This will be your final attack";
+            FinalDecision(textVariable);
+            switch (Decision)
             {
             case 1:   
-                *ptextVariable = "You attacked Cooler before he could launch its attack making him fly away into a portal";
-                TextBox(*ptextVariable);
+                textVariable = "You attacked Cooler before he could launch its attack making him fly away into a portal";
+                TextBox(textVariable);
                 break;
             case 2:
-                *ptextVariable = "You charged a powerfull attack making the SuperNova of Cooler get back to him, eliminating him in the process";
-                TextBox(*ptextVariable);
+                textVariable = "You charged a powerfull attack making the SuperNova of Cooler get back to him, eliminating him in the process";
+                TextBox(textVariable);
                 break;
             case 3:
                 
-                *ptextVariable = "You attacked Cooler were way faster than Cooler to launch its attack, making Cooler fly away and crashing out against the sun";
-                TextBox(*ptextVariable);
+                textVariable = "You attacked Cooler were way faster than Cooler to launch its attack, making Cooler fly away and crashing out against the sun";
+                TextBox(textVariable);
                 break;
             case 4:
                 exit(0);
@@ -876,38 +871,38 @@ void HandleEnding()
         }
         else if (Race == 3) //Final Freezer Race
         {
-            *ptextVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
-            TextBox(*ptextVariable);
+            textVariable = "Somenthing deep inside of you starts to burn feeling so angry and you start to feeling stronger, aura starts to surround you....";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
             system("COLOR 0D");
-            *ptextVariable = "You power has increased unmeasurely!!!";
-            TextBox(*ptextVariable);
+            textVariable = "You power has increased unmeasurely!!!";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
-            TextBox(*ptextVariable);
+            textVariable = "Cooler and Freezer looked at you terrified, the only thin you can think is destroy Cooler";
+            TextBox(textVariable);
             std::cout << "//Press Enter to Continue//\n";
             std::cin.get();
             system("cls");
-            *ptextVariable = "This will be your final attack";
-            FinalDecision(*ptextVariable);
-            switch (*pDecision)
+            textVariable = "This will be your final attack";
+            FinalDecision(textVariable);
+            switch (Decision)
             {
             case 1:   
-                *ptextVariable = "You did not let Cooler do anything against you, recieving multiple attacks until he disappeared";
-                TextBox(*ptextVariable);
+                textVariable = "You did not let Cooler do anything against you, recieving multiple attacks until he disappeared";
+                TextBox(textVariable);
                 break;
             case 2:
-                *ptextVariable = "You charged a powerfull attack behind Coolers back making him get disintegrated";
-                TextBox(*ptextVariable);
+                textVariable = "You charged a powerfull attack behind Coolers back making him get disintegrated";
+                TextBox(textVariable);
                 break;
             case 3:
                 
-                *ptextVariable = "You Grabbed Cooler and started to fly into the space to making him fly away againts the sun and get disintegrated in the process";
-                TextBox(*ptextVariable);
+                textVariable = "You Grabbed Cooler and started to fly into the space to making him fly away againts the sun and get disintegrated in the process";
+                TextBox(textVariable);
                 break;
             case 4:
                 exit(0);
@@ -920,8 +915,8 @@ void HandleEnding()
         }
         
         system("COLOR 0F");
-        *ptextVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
-        TextBox(*ptextVariable);
+        textVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
+        TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
 
@@ -929,8 +924,8 @@ void HandleEnding()
     //Bad Ending
     else if (Player.GetLife() <= 30)
     {
-        *ptextVariable = "You tried everything you could to defeat him... But that was not enough... You lost against Cooler, making Goku lost against Freezer and his brother, corrupting the timeline....";
-        TextBox(*ptextVariable);
+        textVariable = "You tried everything you could to defeat him... But that was not enough... You lost against Cooler, making Goku lost against Freezer and his brother, corrupting the timeline....";
+        TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
         exit(0);
@@ -976,7 +971,6 @@ int main()
 
     HandleEnding();
 
-    
     //This indicates the end of the game
     TextBox("The End");
     std::cin.get();

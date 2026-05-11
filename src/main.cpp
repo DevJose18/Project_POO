@@ -431,7 +431,7 @@ void OpenInventory(Character &targetPlayer)
 }
 
 //This function automates the way of the selection boxes for actions are structured and its parameter is to keep the actual context of the game.
-void Decisions(std::string Text)
+void CombatDecision(std::string Text)
 {
     bool Loop = true;
     while (Loop)
@@ -527,7 +527,7 @@ void AttackScene1()
     // Attack SCENE #1
 
     textVariable = "Cooler lunges at you looking to connect a blow!!!!!";
-    Decisions(textVariable);
+    CombatDecision(textVariable);
     switch (Decision)
     {
     case 1:
@@ -594,7 +594,7 @@ void AttackScene2()
 {
         //Attack SCENE #2
 
-    Decisions(textVariable);
+    CombatDecision(textVariable);
     system("cls");
 
     switch (Decision)
@@ -667,7 +667,7 @@ void AttackScene3()
 {
     //Attack SCENE #3
 
-    Decisions(textVariable);
+    CombatDecision(textVariable);
     system("cls");
 
     switch (Decision)

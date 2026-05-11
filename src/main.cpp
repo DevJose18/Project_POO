@@ -252,6 +252,9 @@ Character Player(100, 4, 4);
 int Decision = 0;
 int *pDecision = &Decision;
 int Race = 0;
+//This Variable helps me to keep every text typed in this code, specifically to not lose the actual Case
+std::string textVariable;
+std::string *ptextVariable = &textVariable;
 
 //This function simulates the way text boxes work in a video game and saves a few lines of code
 void TextBox(std::string text)
@@ -524,32 +527,8 @@ void FinalDecision(std::string Text)
 
 }
 
-
-int main()
+void AttackScene1()
 {
-
-    //This Variable helps me to keep every text typed in this code, specifically to not lose the actual Case
-    std::string textVariable;
-    std::string *ptextVariable = &textVariable;
-    system("COLOR 0F");
-    system("cls");
-    TextBox("You are a time patroller whose duty is to prevent bad people from altering the main time line");
-    TextBox("they called you to let you know that someone has broken into the sacred timeline in the year 762");
-    TextBox("when you arrive at the place you get the surprise that Goku will not only face Freezer in the Namek fight");
-    TextBox("his brother Cooler meets him ready to defeat him,");
-    TextBox("however, it's not the only thing you notice...");
-    std::cout << "\n";
-    TextBox("You notice that Cooler and Freezer have an unusual increase in power.");
-    TextBox("Your duty will be to help Goku defeat Cooler and weaken Freezer enough for Goku to defeat him.");
-    std::cout << "\n";
-    TextBox("But be careful if you make the mistake of not letting history fluctuate as it should, the consequences can be dire......");
-    std::cout << "//Press Enter to Continue//\n";
-    std::cin.get();
-    Instructions();
-    CharacterSelection();
-    CapsuleSelection();
-    system("cls");
-
     // Attack SCENE #1
 
     *ptextVariable = "Cooler lunges at you looking to connect a blow!!!!!";
@@ -584,9 +563,11 @@ int main()
     std::cout << "//Press Enter to Continue//\n";
     std::cin.ignore();
     std::cin.get();
+}
 
-    system("cls");
-    
+void CinematicScene1()
+{
+        
         //Cinematic SCENE #1
 
     switch (*pDecision)
@@ -612,6 +593,10 @@ int main()
         break;
     }
 
+}
+
+void AttackScene2()
+{
         //Attack SCENE #2
 
     Decisions(*ptextVariable);
@@ -653,7 +638,10 @@ int main()
     std::cin.ignore();
     std::cin.get();
     system("cls");
+}
 
+void CinematicScene2()
+{
         //Cinematic SCENE #2
 
     switch (*pDecision)
@@ -678,8 +666,11 @@ int main()
         exit(0);
         break;
     }
+}
 
-        //Attack SCENE #3
+void AttackScene3()
+{
+    //Attack SCENE #3
 
     Decisions(*ptextVariable);
     system("cls");
@@ -737,10 +728,13 @@ int main()
     std::cin.ignore();
     std::cin.get();
     system("cls");
+}
 
-        //Cinematic SCENE #3
+void CinematicScene3()
+{
+    //Cinematic SCENE #3
 
-        switch (*pDecision)
+    switch (*pDecision)
     {
     case 1:   
         *ptextVariable = "Cooler is getting tired of it, so he is disposed to destroy you with a powerfull attack!!!";
@@ -768,7 +762,10 @@ int main()
     std::cout << "//Press Enter to Continue//\n";
     std::cin.get();
     system("cls");
+}
 
+void HandleEnding()
+{
     // Final SCENE
     
     //Good Ending
@@ -939,6 +936,47 @@ int main()
         exit(0);
     }
 
+}
+
+int main()
+{
+
+    system("COLOR 0F");
+    system("cls");
+    TextBox("You are a time patroller whose duty is to prevent bad people from altering the main time line");
+    TextBox("they called you to let you know that someone has broken into the sacred timeline in the year 762");
+    TextBox("when you arrive at the place you get the surprise that Goku will not only face Freezer in the Namek fight");
+    TextBox("his brother Cooler meets him ready to defeat him,");
+    TextBox("however, it's not the only thing you notice...");
+    std::cout << "\n";
+    TextBox("You notice that Cooler and Freezer have an unusual increase in power.");
+    TextBox("Your duty will be to help Goku defeat Cooler and weaken Freezer enough for Goku to defeat him.");
+    std::cout << "\n";
+    TextBox("But be careful if you make the mistake of not letting history fluctuate as it should, the consequences can be dire......");
+    std::cout << "//Press Enter to Continue//\n";
+    std::cin.get();
+    Instructions();
+    CharacterSelection();
+    CapsuleSelection();
+    system("cls");
+
+    AttackScene1();
+
+    system("cls");
+
+    CinematicScene1();
+
+    AttackScene2();
+
+    CinematicScene2();
+
+    AttackScene3();
+
+    CinematicScene3();
+
+    HandleEnding();
+
+    
     //This indicates the end of the game
     TextBox("The End");
     std::cin.get();

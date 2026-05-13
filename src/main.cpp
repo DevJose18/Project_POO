@@ -83,6 +83,9 @@ private:
 	int Life;
 	int Ki;
 	int Stamina;
+    int Zeni = 700;
+    int Level = 1;
+    int Experience = 0;
 	//Secondary properties
 	std::vector<Capsule> inventory;
 
@@ -242,11 +245,232 @@ public:
         inventory.erase(inventory.begin() + index);
     }
 
+    int GetZeni()
+    {
+        return Zeni;
+    }
+
+    void UseZeni(int value)
+    {
+        Zeni -= value;
+    }
+
+    void LevelUp(int value)
+    {
+        Experience += value;
+        if(Experience >= Level * 100)
+        {
+            Level++;
+        }
+    }
+};
+
+class Store
+{
+private:
+    std::vector<Capsule> capsulesInStore;
+    std::vector<int>     amountOfCapsules;
+    std::vector<int>     priceOfCapsules;
+    std::vector<Capsule> selectedCapsules;
+    std::vector<int>     selectedCapsulesAmount;
+    std::vector<int>     selectedCapsulesPrice;
+
+public:
+
+    void AddCapsule(Capsule capsule, int amount, int price)
+    {
+        capsulesInStore.push_back(capsule);
+        amountOfCapsules.push_back(amount);
+        priceOfCapsules.push_back(price);
+    }
+
+    //Method called by BuyCapsule() to decrease the amount of capsules or delete them from the store
+    void DeleteCapsule(std::string selected, Character& player)
+    {
+        for (int j = 0; j < (int)capsulesInStore.size(); j++)
+        {
+            if (capsulesInStore[j].GetCapsuleName() == selected)
+            {
+                player.AddToInventory(capsulesInStore[j]);
+
+                if (amountOfCapsules[j] > 1)
+                {
+                    amountOfCapsules[j]--;
+                }
+                else
+                {
+                    capsulesInStore.erase(capsulesInStore.begin() + j);
+                    amountOfCapsules.erase(amountOfCapsules.begin() + j);
+                    priceOfCapsules.erase(priceOfCapsules.begin() + j);
+                }
+                break;
+            }
+        }
+    }
+
+    //Method to show the capsules that can be bought
+    void ShowCapsulesInStore(int optionSelected)
+    {
+        std::string typeFilter;
+        switch (optionSelected)
+        {
+            case 1: typeFilter = "Healing"; break;
+            case 2: typeFilter = "Energy";  break;
+            default: break;
+        }
+
+        selectedCapsules.clear();
+        selectedCapsulesAmount.clear();
+        selectedCapsulesPrice.clear();
+
+        for (int i = 0; i < (int)capsulesInStore.size(); i++)
+        {
+            if (capsulesInStore[i].GetCapsuleType() == typeFilter)
+            {
+                selectedCapsules.push_back(capsulesInStore[i]);
+                selectedCapsulesAmount.push_back(amountOfCapsules[i]);
+                selectedCapsulesPrice.push_back(priceOfCapsules[i]);
+            }
+        }
+
+        //If it did not find any capsule with that category
+        if (selectedCapsules.empty())
+        {
+            std::cout << "There is no capsule of that category in stock\n";
+        }
+        //If it did find a capsule of that category
+        else
+        {
+            for (int i = 0; i < (int)selectedCapsules.size(); i++)
+            {
+                std::cout << "--------------------" << i + 1 << "---------------------\n";
+                selectedCapsules[i].CapsuleSortedData();
+                std::cout << "Amount: " << selectedCapsulesAmount[i] << "\n";
+                std::cout << "Price: "  << selectedCapsulesPrice[i]  << " Zeni\n";
+            }
+        }
+    }
+
+    //Method to buy the capsules and add them to the players inventory
+    void BuyCapsule(Character& player)
+    {
+        system("cls");
+        if (capsulesInStore.empty())
+        {
+            std::cout << "There is no capsules to buy at this moment" << std::endl;
+            std::cin.get();
+            std::cout << "PRESS ENTER TO GO BACK TO THE MENU" << std::endl;
+            system("cls");
+        }
+        else
+        {
+            //Store logic
+            while (true)
+            {
+                std::cout << "-------------------------------Store-------------------------------" << std::endl;
+                std::cout << "Your Zeni: " << player.GetZeni() << "\n\n";
+                int options = 0;
+                while (true)
+                {
+                    std::cout << "Which Categories do u want to see" << std::endl;
+                    std::cout << "1.Healing" << std::endl;
+                    std::cout << "2.Energy" << std::endl;
+                    std::cin >> options;
+                    std::cin.ignore();
+
+                    if (options > 2 || options <= 0)
+                    {
+                        system("cls");
+                        std::cout << "You did not input a valid option" << std::endl;
+                        std::cout << "PRESS ENTER TO RETRY" << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore();
+                        system("cls");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    if (std::cin.fail())
+                    {
+                        system("cls");
+                        std::cout << "You did not input a valid option" << std::endl;
+                        std::cout << "PRESS ENTER TO RETRY" << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore();
+                    }
+                }
+                ShowCapsulesInStore(options);
+                std::cout << std::endl;
+                std::cout << "INPUT 0 TO GET OUT OF THE STORE" << std::endl;
+                std::cin >> options;
+                std::cin.ignore();
+                //If in valid input
+                if (std::cin.fail())
+                {
+                    system("cls");
+                    std::cout << "You did not input a valid option" << std::endl;
+                    std::cout << "PRESS ENTER TO RETRY" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                }
+                else
+                {
+                    //Statement to get out of the menu Store
+                    if (options == 0)
+                    {
+                        system("cls");
+                        selectedCapsules.clear();
+                        selectedCapsulesAmount.clear();
+                        selectedCapsulesPrice.clear();
+                        break;
+                    }
+                    else
+                    {
+                        //If the user input a Non-valid value
+                        if (options > selectedCapsules.size())
+                        {
+                            std::cout << "You did not input a valid option" << std::endl;
+                            std::cin.get();
+                            std::cout << "PRESS ENTER TO RETRY" << std::endl;
+                            system("cls");
+                        }
+                        //If does not have enough zeni
+                        else if (player.GetZeni() < selectedCapsulesPrice[options - 1])
+                        {
+                            std::cout << "Not enough Zeni, please buy another capsule" << std::endl;
+                            selectedCapsules.clear();
+                            selectedCapsulesAmount.clear();
+                            selectedCapsulesPrice.clear();
+                            std::cin.get();
+                            std::cout << "PRESS ENTER TO RETRY" << std::endl;
+                            system("cls");
+                        }
+                        //If does have enough zeni
+                        else if (player.GetZeni() >= selectedCapsulesPrice[options - 1])
+                        {
+                            system("cls");
+                            std::cout << "You have bought 1 capsule of " << selectedCapsules[options - 1].GetCapsuleName() << std::endl;
+                            player.UseZeni(selectedCapsulesPrice[options - 1]);
+                            DeleteCapsule(selectedCapsules[options - 1].GetCapsuleName(), player);
+                            selectedCapsules.clear();
+                            selectedCapsulesAmount.clear();
+                            selectedCapsulesPrice.clear();
+                            std::cout << "PRESS ENTER TO GO BACK TO THE MENU" << std::endl;
+                            std::cin.get();
+                            system("cls");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 //Player is an object from the class "Character" used for modify player stadistics
 Character Player(100, 4, 4);
-
+Store CapsuleStore;
 // These variables are used to determine which direction the game will play
 int Decision = 0;
 int Race = 0;
@@ -264,57 +488,6 @@ void SpecialTextBox(std::string text)
 {
     std::cout << "|-------------------------------|\n";
     std::cout << text << "\n";
-}
-
-// This function lets the player pick capsules before the adventure it starts
-void CapsuleSelection()
-{
-    std::vector<Capsule> availableCapsules = {
-        Capsule("EnergyZ",      1, 100),
-        Capsule("EnergyM",      1, 25),
-        Capsule("PowerCapsule", 2, 3),
-        Capsule("MiniEnergy",   1, 10),
-        Capsule("KiBooster",    2, 5),
-    };
-
-        while (true)
-        {
-            system("cls");
-            TextBox("--- CAPSULE SELECTION ---");
-            TextBox("Choose 2 capsules to bring to your adventure.\n");
-
-            for (int i = 0; i < (int)availableCapsules.size(); i++)
-            {
-                std::cout << "--- " << i + 1 << " ---\n";
-                availableCapsules[i].CapsuleSortedData();
-            }
-
-            int choice;
-            std::cin >> choice;
-
-            if (std::cin.fail() || choice < 1 || choice > availableCapsules.size())
-            {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max());
-                TextBox("Invalid option, try again.");
-            }
-            else
-            {
-                Player.AddToInventory(availableCapsules[choice - 1]);
-                std::cout << ">>> " << availableCapsules[choice - 1].GetCapsuleName() << " added!\n";
-                if (Player.GetInventorySize() > 1)
-                {
-                    break;
-                }
-                
-            }
-        }
-    
-
-    TextBox("Inventory ready! Starting adventure...");
-    std::cin.ignore();
-    std::cin.get();
-    system("cls");
 }
 
 //This function sets the selected character apart from checking if the player actually selects a playable character
@@ -933,8 +1106,18 @@ void HandleEnding()
 
 }
 
+void AddCapsulesToStore()
+{
+    CapsuleStore.AddCapsule(Capsule("EnergyZ",1,100),2,300);
+    CapsuleStore.AddCapsule(Capsule("EnergyM",1,25),5,100);
+    CapsuleStore.AddCapsule(Capsule("MiniEnergy",1,10),8,40);
+    CapsuleStore.AddCapsule(Capsule("PowerCapsule",2,3),3,150);
+    CapsuleStore.AddCapsule(Capsule("KiBooster",2,5),3,200);
+}
+
 int main()
 {
+    AddCapsulesToStore();
 
     system("COLOR 0F");
     system("cls");
@@ -952,7 +1135,7 @@ int main()
     std::cin.get();
     Instructions();
     CharacterSelection();
-    CapsuleSelection();
+    CapsuleStore.BuyCapsule(Player);
     system("cls");
 
     AttackScene1();

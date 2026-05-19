@@ -77,7 +77,7 @@ public:
 
 class Character
 {
-private:
+protected:
 
 	//Main properties
 	int Life;
@@ -188,6 +188,10 @@ public:
 		return Life;
 	}
 
+    void SetLife(int value)
+    {
+        Life = value;
+    }
 	//This method helps me to decrease the value of Ki
 	void LoseKi(int Value)
 	{
@@ -263,6 +267,31 @@ public:
             Level++;
         }
     }
+
+    int GetLevel()
+
+    {
+        return Level;
+    }
+
+};
+
+class Enemy : public Character
+{
+
+
+    public:
+        Enemy(int initialLife, int initialKi, int initialStamina) 
+            : Character(initialLife, initialKi, initialStamina)
+        {
+        }
+        
+        void EnemyPowerUp()
+        {
+            Level++;
+            Life += 30;
+            Ki += 2;
+        }
 };
 
 class Store
@@ -459,7 +488,6 @@ public:
                             std::cout << "PRESS ENTER TO GO BACK TO THE MENU" << std::endl;
                             std::cin.get();
                             system("cls");
-                            break;
                         }
                     }
                 }
@@ -470,6 +498,7 @@ public:
 
 //Player is an object from the class "Character" used for modify player stadistics
 Character Player(100, 4, 4);
+Enemy Cooler(180, 5, 5);
 Store CapsuleStore;
 // These variables are used to determine which direction the game will play
 int Decision = 0;
@@ -613,6 +642,9 @@ void CombatDecision(std::string Text)
         Player.PrintLife();
         Player.PrintKi();
         Player.GetStamina();
+        std::cout << "Player Level: " << Player.GetLevel();
+        std::cout << "Cooler's Life: " << Cooler.GetLife() << "\n\n";
+        std::cout << "Cooler's Level: " << Cooler.GetLevel() << "\n\n";
         
         TextBox(Text);
         TextBox("What do you want to do?");
@@ -706,6 +738,7 @@ void AttackScene1()
     case 1:
         TextBox("You also attacked him, exchanging blows with great aggressiveness, causing a great damage to him, but also a little of damage to you.....");
         Player.LoseLife(25);
+        Cooler.LoseLife(35);
         break;
     case 2:
 
@@ -760,7 +793,6 @@ void CinematicScene1()
         exit(0);
         break;
     }
-
 }
 
 void AttackScene2()
@@ -776,6 +808,7 @@ void AttackScene2()
         textVariable = "You attacked him aswell, for luck you connect more hits than him, causing great damage to him!!!";
         TextBox(textVariable);
         Player.LoseLife(20);
+        Cooler.LoseLife(40);
         Player.RecoverStamina();
         break;
     case 2:
@@ -849,6 +882,7 @@ void AttackScene3()
         textVariable = "You Keep attacking causing more damage, but causing a great damage to you!!!";
         TextBox(textVariable);
         Player.LoseLife(25);
+        Cooler.LoseLife(45);
         Player.RecoverStamina();
         break;
     case 2:
@@ -858,6 +892,7 @@ void AttackScene3()
             textVariable = "You charged a great Ki attack causing great great damage against him";
             TextBox(textVariable);
             Player.LoseKi(15);
+            Cooler.LoseLife(50);
             Player.PrintKi();
         }
         else if (Player.GetKi() >= 10 )
@@ -865,6 +900,7 @@ void AttackScene3()
             textVariable = "You charged a Ki attack causing great damage against him";
             TextBox(textVariable);
             Player.LoseKi(10);
+            Cooler.LoseLife(35);
             Player.PrintKi();
         }
         else if (Player.GetKi() < 10)
@@ -937,7 +973,7 @@ void HandleEnding()
     // Final SCENE
     
     //Good Ending
-    if (Player.GetLife() > 45)
+    if (Player.GetLife() > 45 && Cooler.GetLife() <= 0)
     {
         textVariable = "Cooler was trying to charge his super attack when you managed to attack him from behind sending him to the center of the planet where he dies disintegrated";
         TextBox(textVariable);
@@ -949,9 +985,10 @@ void HandleEnding()
         TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
+        Player.LevelUp(50);
     }
     //Special Endings
-    else if (Player.GetLife() >= 35) //Final Saiyan Race
+    else if (Player.GetLife() >= 35 && Cooler.GetLife() <= 0) //Final Saiyan Race
     {
         if (Race == 1)
         {
@@ -1089,6 +1126,7 @@ void HandleEnding()
         
         system("COLOR 0F");
         textVariable = "Thanks to you the time line is safe again helping Goku with Freezers brother and dont let him destroy the time line";
+        Player.LevelUp(100);
         TextBox(textVariable);
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
@@ -1097,11 +1135,11 @@ void HandleEnding()
     //Bad Ending
     else if (Player.GetLife() <= 30)
     {
-        textVariable = "You tried everything you could to defeat him... But that was not enough... You lost against Cooler, making Goku lost against Freezer and his brother, corrupting the timeline....";
+        textVariable = "You tried everything you could to defeat him... But that was not enough... You lost against Cooler making him go stronger, making Goku lost against Freezer and his brother, corrupting the timeline....";
         TextBox(textVariable);
+        Cooler.EnemyPowerUp();
         std::cout << "//Press Enter to Continue//\n";
         std::cin.get();
-        exit(0);
     }
 
 }
@@ -1138,24 +1176,70 @@ int main()
     CapsuleStore.BuyCapsule(Player);
     system("cls");
 
-    AttackScene1();
+    while (true)
+    {
+        while (Cooler.GetLife() > 0)
+        {
+            system("cls");
+            AttackScene1();
 
-    system("cls");
+            if (Cooler.GetLife() <= 0 || Player.GetLife() <= 0)
+            {
+                break;
+            }
 
-    CinematicScene1();
+            system("cls");
 
-    AttackScene2();
+            CinematicScene1();
+            if (Cooler.GetLife() <= 0 || Player.GetLife() <= 0)
+            {
+                break;
+            }
 
-    CinematicScene2();
+            AttackScene2();
 
-    AttackScene3();
+            if (Cooler.GetLife() <= 0 || Player.GetLife() <= 0)
+            {
+                break;
+            }
+            CinematicScene2();
 
-    CinematicScene3();
+            if (Cooler.GetLife() <= 0 || Player.GetLife() <= 0)
+            {
+                break;
+            }
+            AttackScene3();
 
-    HandleEnding();
+            if (Cooler.GetLife() <= 0 || Player.GetLife() <= 0)
+            {
+                break;
+            }
 
-    //This indicates the end of the game
-    TextBox("The End");
+            CinematicScene3();
+
+        }
+        
+        HandleEnding();
+
+        //This indicates the end of the game
+        TextBox("Do you want to try again? Y = 1 / N = AnyValue");
+        std::cin >> Decision;
+        if (Decision == 1)
+        {
+            if (Player.GetLife() <= 0)
+            {
+                Player.SetLife(100);
+            }
+            else if ((Cooler.GetLife() <= 0))
+            {
+                Cooler.SetLife(180);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
     std::cin.get();
     
     return 0;
